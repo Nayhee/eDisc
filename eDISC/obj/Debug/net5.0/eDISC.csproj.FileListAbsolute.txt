@@ -428,3 +428,6 @@ C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\Disc\Index.
 C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\User\Create.cshtml.g.cs
 C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\User\Delete.cshtml.g.cs
 C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\User\Edit.cshtml.g.cs
+C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\Disc\Create.cshtml.g.cs
+C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\Disc\Edit.cshtml.g.cs
+C:\Users\natha\workspace\VS\eDISC\eDISC\obj\Debug\net5.0\Razor\Views\Disc\Delete.cshtml.g.cs

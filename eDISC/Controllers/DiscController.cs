@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using eDISC.Models;
+using System;
 
 namespace eDISC.Controllers
 {
@@ -14,7 +15,6 @@ namespace eDISC.Controllers
         {
             _discRepo = discRepo;
         }
-
 
 
         // GET: DiscController
@@ -44,57 +44,66 @@ namespace eDISC.Controllers
         // POST: DiscController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Disc disc)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _discRepo.AddDisc(disc);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(disc);
             }
         }
 
         // GET: DiscController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Disc disc = _discRepo.GetDiscById(id);
+            if(disc == null)
+            {
+                return NotFound();
+            }
+            return View(disc);
         }
 
         // POST: DiscController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Disc disc)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _discRepo.UpdateDisc(disc);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(disc);
             }
         }
 
         // GET: DiscController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Disc disc = _discRepo.GetDiscById(id);
+            return View(disc);
         }
 
         // POST: DiscController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Disc disc)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _discRepo.DeleteDisc(id);
+                return RedirectToAction("Index");
             }
-            catch
+            catch(Exception)
             {
-                return View();
+                return View(disc);
             }
         }
     }

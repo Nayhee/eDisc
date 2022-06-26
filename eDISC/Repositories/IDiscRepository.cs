@@ -8,5 +8,8 @@ namespace eDISC.Repositories
     {
         List<Disc> GetAllDiscs();
         Disc GetDiscById(int id);
+        void AddDisc(Disc disc);
+        void UpdateDisc(Disc disc);
+        void DeleteDisc(int id);
     }
 }
