@@ -1,0 +1,27 @@
+﻿@model IEnumerable<eDISC.Models.Disc>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<img style="max-width: 80%" src="../Images-Edisc/prodigyHeader.png"/>
+
+<h2 class="discsHeader">All Discs</h2>
+
+<div class="DiscsContainer">
+    @foreach(var item in Model)
+    {
+        <div class="Disc">
+            <img src="@item.ImageUrl" alt="disc" style="max-height: 8rem" />
+            <h5>"@item.NameBrandPlastic"</h5>
+            <p> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+        </div>
+    }
+</div>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+         
