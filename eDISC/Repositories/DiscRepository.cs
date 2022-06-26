@@ -150,5 +150,87 @@ namespace eDISC.Repositories
             }
         }
 
+        public void AddDisc(Disc disc)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Discs ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight)
+                                        OUTPUT INSERTED.ID
+                                        VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight)";
+                    cmd.Parameters.AddWithValue("@name", disc.Name);
+                    cmd.Parameters.AddWithValue("@brandId", disc.BrandId);
+                    cmd.Parameters.AddWithValue("@condition", disc.Condition);
+                    cmd.Parameters.AddWithValue("@speed", disc.Speed);
+                    cmd.Parameters.AddWithValue("@glide", disc.Glide);
+                    cmd.Parameters.AddWithValue("@turn", disc.Turn);
+                    cmd.Parameters.AddWithValue("@fade", disc.Fade);
+                    cmd.Parameters.AddWithValue("@plastic", disc.Plastic);
+                    cmd.Parameters.AddWithValue("@price", disc.Price);
+                    cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
+                    cmd.Parameters.AddWithValue("@weight", disc.Weight);
+    
+                    int id = (int)cmd.ExecuteScalar();
+                    disc.Id = id;
+                }
+            }
+        }
+        public void UpdateDisc(Disc disc)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Discs
+                                        SET 
+                                            [Name] = @name, 
+                                            BrandId = @brandId,
+                                            Condition = @condition,
+                                            Speed = @speed, 
+                                            Glide = @glide,
+                                            Turn = @turn,
+                                            Fade = @fade, 
+                                            Plastic = @plastic,
+                                            Price = @price,
+                                            ImageURL = @imageURL,
+                                            Weight = @weight,
+                                               
+                                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", disc.Name);
+                    cmd.Parameters.AddWithValue("@brandId", disc.BrandId);
+                    cmd.Parameters.AddWithValue("@condition", disc.Condition);
+                    cmd.Parameters.AddWithValue("@speed", disc.Speed);
+                    cmd.Parameters.AddWithValue("@glide", disc.Glide);
+                    cmd.Parameters.AddWithValue("@turn", disc.Turn);
+                    cmd.Parameters.AddWithValue("@fade", disc.Fade);
+                    cmd.Parameters.AddWithValue("@plastic", disc.Plastic);
+                    cmd.Parameters.AddWithValue("@price", disc.Price);
+                    cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
+                    cmd.Parameters.AddWithValue("@weight", disc.Weight);
+                    cmd.Parameters.AddWithValue("@id", disc.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteDisc(int discId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" DELETE FROM Discs WHERE Id=@id";
+                    cmd.Parameters.AddWithValue("@id", discId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

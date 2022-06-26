@@ -4,23 +4,20 @@
     ViewData["Title"] = "Details";
 }
 
-<div>
-    <div class="discDetail">
-        <div>
-            <img class="discDetailImage" src="@Model.ImageUrl" alt="disc" style="max-height: 8rem" />
-        </div>
 
-        <div>
-            <h2 class="discDetailHeader">@Model.NameBrandPlastic</h2>
-            <hr />
-            <p class="discDetailFlightNumbers">Flight Numbers: @Model.Speed | @Model.Glide | @Model.Turn | @Model.Fade </p>
-            <p class="discDetailWeight">Weight: @Model.Weight g</p>
-            <p class="discDetailPrice">Price:  $@Model.Price </p>
-            <p class="discDetailPrice">Condition: @Model.Condition </p>
+    <div class="card">
+        <img class="card-img-top" src="@Model.ImageUrl" alt="Card image cap" />
+        
+        <div class="card-body">
+            <h2 class="card-title">@Model.NameBrandPlastic</h2>
+            <p class="card-text">Flight Numbers: @Model.Speed | @Model.Glide | @Model.Turn | @Model.Fade </p>
+            <p class="card-text">Weight: @Model.Weight g</p>
+            <p class="card-text">Price:  $@Model.Price </p>
+            <p class="card-text">Condition: @Model.Condition </p>
        
-            <p>Tags: @Model.DisplayTags</p>
+            <p class="card-text">Tags: @Model.DisplayTags</p>
 
-            <button class="addToCartButton">ADD TO CART</button>
+            <a asp-action="Cart">ADD TO CART</a>
         </div>
     </div>
     

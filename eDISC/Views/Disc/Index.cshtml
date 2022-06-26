@@ -12,10 +12,12 @@
 <div class="DiscsContainer">
     @foreach(var item in Model)
     {
-        <div class="Disc">
-            <img src="@item.ImageUrl" alt="disc" style="max-height: 8rem" />
-            <h5>"@item.NameBrandPlastic"</h5>
-            <p> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+        <div class="card">
+            <img class="card-img-top" src="@item.ImageUrl" alt="disc"/>
+            <div class="card-body">
+                <h5 class="card-title">@item.NameBrandPlastic"</h5>
+                <p class="card-text"> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+            </div>
         </div>
     }
 </div>
