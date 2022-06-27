@@ -23,6 +23,34 @@ namespace eDISC.Repositories
             }
         }
 
+        
+        public List<User> GetAllAdmins()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" SELECT * FROM Users WHERE IsAdmin='Y' ";
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        List<User> admins = new List<User>();
+                        while (reader.Read())
+                        {
+                            User user = new User
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                            };
+                            admins.Add(user);
+                        }
+                        return admins;
+                    }
+                }
+            }
+        }
         public List<User> GetAllUsers()
         {
             using(SqlConnection conn = Connection)
@@ -30,7 +58,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" SELECT * FROM Users";
+                    cmd.CommandText = @" SELECT * FROM Users WHERE IsAdmin='N' ";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {

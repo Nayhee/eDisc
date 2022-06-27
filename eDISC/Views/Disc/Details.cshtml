@@ -9,13 +9,32 @@
         <img class="card-img-top" src="@Model.ImageUrl" alt="Card image cap" />
         
         <div class="card-body">
-            <h2 class="card-title">@Model.NameBrandPlastic</h2>
-            <p class="card-text">Flight Numbers: @Model.Speed | @Model.Glide | @Model.Turn | @Model.Fade </p>
+            <h2 class="card-title">@Model.NamePlastic</h2>
+            <div class="flightNums">
+                <div class="speedDiv">
+                    <p>Speed</p>
+                    <p>@Model.Speed</p>
+                </div>
+                <div class="glideDiv">
+                    <p>Glide</p>
+                    <p>@Model.Glide</p>
+                </div>
+                <div class="turnDiv">
+                    <p>Turn</p>
+                    <p>@Model.Turn</p>
+                </div>
+                <div class="fadeDiv">
+                    <p>Fade</p>
+                    <p>@Model.Fade</p>
+                </div>
+            </div>
+            <p class="card-text">@Model.Description</p>
+            <p class="card-text">Price: $@Model.Price </p>
             <p class="card-text">Weight: @Model.Weight g</p>
-            <p class="card-text">Price:  $@Model.Price </p>
             <p class="card-text">Condition: @Model.Condition </p>
+            <p class="card-text">Flight Numbers: @Model.Speed | @Model.Glide | @Model.Turn | @Model.Fade </p>
        
-            <p class="card-text">Tags: @Model.DisplayTags</p>
+            <p class="card-text">Categories: @Model.DisplayTags</p>
 
             <a asp-action="Cart">ADD TO CART</a>
         </div>

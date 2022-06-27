@@ -83,6 +83,8 @@ namespace eDISC.Repositories
                                 Price = reader.GetInt32(reader.GetOrdinal("Price")),
                                 Weight = reader.GetInt32(reader.GetOrdinal("Weight")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
+                                DiscTypeId = reader.GetInt32(reader.GetOrdinal("DiscTypeId")),
+                                Description = reader.GetString(reader.GetOrdinal("Description")),
                                 Brand = new Brand()
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("BrandsId")),
@@ -131,6 +133,8 @@ namespace eDISC.Repositories
                                 Price = reader.GetInt32(reader.GetOrdinal("Price")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageURL")),
                                 Weight = reader.GetInt32(reader.GetOrdinal("Weight")),
+                                Description = reader.GetString(reader.GetOrdinal("Description")),
+                                DiscTypeId = reader.GetInt32(reader.GetOrdinal("DiscTypeId")),
                                 Brand = new Brand()
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("BrandsId")),
@@ -157,9 +161,9 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Discs ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight)
+                    cmd.CommandText = @"INSERT INTO Discs ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight, Description, DiscTypeId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight)";
+                                        VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight, @description, @discTypeId)";
                     cmd.Parameters.AddWithValue("@name", disc.Name);
                     cmd.Parameters.AddWithValue("@brandId", disc.BrandId);
                     cmd.Parameters.AddWithValue("@condition", disc.Condition);
@@ -171,7 +175,9 @@ namespace eDISC.Repositories
                     cmd.Parameters.AddWithValue("@price", disc.Price);
                     cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
                     cmd.Parameters.AddWithValue("@weight", disc.Weight);
-    
+                    cmd.Parameters.AddWithValue("@description", disc.Description);
+                    cmd.Parameters.AddWithValue("@discTypeId", disc.DiscTypeId);
+
                     int id = (int)cmd.ExecuteScalar();
                     disc.Id = id;
                 }
@@ -198,6 +204,8 @@ namespace eDISC.Repositories
                                             Price = @price,
                                             ImageURL = @imageURL,
                                             Weight = @weight,
+                                            Description = @description,
+                                            DiscTypeId = @discTypeId
                                                
                                             WHERE Id = @id";
 
@@ -213,6 +221,8 @@ namespace eDISC.Repositories
                     cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
                     cmd.Parameters.AddWithValue("@weight", disc.Weight);
                     cmd.Parameters.AddWithValue("@id", disc.Id);
+                    cmd.Parameters.AddWithValue("@description", disc.Description);
+                    cmd.Parameters.AddWithValue("@discTypeId", disc.DiscTypeId);
 
                     cmd.ExecuteNonQuery();
                 }

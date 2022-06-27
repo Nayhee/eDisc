@@ -15,6 +15,7 @@ namespace eDISC.Models
         [DisplayName("Brand")]
         public int BrandId { get; set; }
         [Required]
+        public Brand Brand { get; set; }
         public string Condition { get; set; }
         [Required]
         public int Speed { get; set; }
@@ -33,14 +34,19 @@ namespace eDISC.Models
         [Required]
         public string ImageUrl { get; set; }
 
-        public Brand Brand { get; set; }
+        public string Description { get; set; }
+
+        public int DiscTypeId { get; set; }
+      
+        public DiscType DiscType { get; set; }
+
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
-        public string NameBrandPlastic
+        public string NamePlastic
         {
             get
             {
-                return $"{Brand.Name} {Name} {Plastic} Plastic";
+                return $"{Name} - {Plastic}";
             }
         }
 

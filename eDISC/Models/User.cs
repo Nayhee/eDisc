@@ -16,6 +16,8 @@ namespace eDISC.Models
         [EmailAddress]
         public string Email { get; set; }
 
+        public string IsAdmin { get; set; }
+
         public List<SoldDisc> SoldDiscs { get; set; } = new List<SoldDisc>();
 
     }
