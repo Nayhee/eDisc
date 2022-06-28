@@ -18,7 +18,7 @@ namespace eDISC.Models
 
         public string IsAdmin { get; set; }
 
-        public List<SoldDisc> SoldDiscs { get; set; } = new List<SoldDisc>();
+        public List<Disc> SoldDiscs { get; set; } = new List<Disc>();
 
     }
 }

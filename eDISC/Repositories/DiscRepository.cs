@@ -53,7 +53,7 @@ namespace eDISC.Repositories
             }
         }
         
-        public List<Disc> GetAllDiscs()
+        public List<Disc> GetAllDiscsForSale()
         {
             using (SqlConnection conn = Connection)
             {
@@ -62,7 +62,8 @@ namespace eDISC.Repositories
                 {
                     cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
                                         FROM Discs d 
-                                        JOIN Brands b on b.Id=d.BrandId";
+                                        JOIN Brands b on b.Id=d.BrandId
+                                        WHERE d.DiscTypeId=1";
 
                     using(SqlDataReader reader = cmd.ExecuteReader())
                     {
