@@ -4,26 +4,29 @@
     ViewData["Title"] = "Index";
 }
 
+<h1 class="discsHeader">All Discs</h1>
 
-<img style="max-width: 80%" src="../Images-Edisc/prodigyHeader.png"/>
 
-<h2 class="discsHeader">All Discs</h2>
-
-<div class="DiscsContainer">
+<div class="discList">
     @foreach(var item in Model)
     {
-        <div class="card">
-            <img class="card-img-top" src="@item.ImageUrl" alt="disc"/>
-            <div class="card-body">
-                <h5 class="card-title">@item.NamePlastic"</h5>
-                <p class="card-text"> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+        <div class="card-disc">
+            <div class="card-disc-content">
+                <div class="image_div">
+                    <img class="card-img-top" style="max-width: 18vw" src="@item.ImageUrl" alt="disc"/>
+                </div>
+                <h2><span class="card-disc-name">@item.NamePlastic</span></h2>
+          
+                <div class="detailsButtonsContainer">
+                    <p class="cardDiscButton"> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+                </div>
             </div>
-        </div>
+      </div>
     }
 </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p class="addDiscContainer">
+    <a class="addDiscButton" asp-action="Create">Add Disc</a>
 </p>
 
          

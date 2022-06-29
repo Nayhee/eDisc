@@ -20,7 +20,7 @@ namespace eDISC.Controllers
         // GET: DiscController
         public ActionResult Index()
         {
-            List<Disc> discs = _discRepo.GetAllDiscs();
+            List<Disc> discs = _discRepo.GetAllDiscsForSale();
             return View(discs);
         }
 

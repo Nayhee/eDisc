@@ -60,7 +60,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
+                    cmd.CommandText = @"SELECT d.*, b.Name as BrandName 
                                         FROM Discs d 
                                         JOIN Brands b on b.Id=d.BrandId
                                         WHERE d.DiscTypeId=1";
@@ -88,7 +88,6 @@ namespace eDISC.Repositories
                                 Description = reader.GetString(reader.GetOrdinal("Description")),
                                 Brand = new Brand()
                                 {
-                                    Id = reader.GetInt32(reader.GetOrdinal("BrandsId")),
                                     Name = reader.GetString(reader.GetOrdinal("BrandName"))
                                 }
                             };

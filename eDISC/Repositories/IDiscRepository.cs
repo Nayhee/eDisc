@@ -6,7 +6,7 @@ namespace eDISC.Repositories
 {
     public interface IDiscRepository
     {
-        List<Disc> GetAllDiscs();
+        List<Disc> GetAllDiscsForSale();
         Disc GetDiscById(int id);
         void AddDisc(Disc disc);
         void UpdateDisc(Disc disc);

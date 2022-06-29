@@ -1,6 +1,143 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/* 
+    #222831    dark blue
+    #393e46    dark gray
+    #0092ca    light blue
+    #eeeeee    white-ish
+
+*/
+
+.homeHeader {
+    color: #3fbdc2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.homeHeaderSlogan {
+    color: #3fbdc2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1vw;
+}
+
+.discsHeader {
+    color: #3fbdc2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vw;
+}
+
+.discList {
+    display: flex;
+    flex: 0 1 15%;
+    justify-content: center;
+    align-content: stretch;
+    flex-wrap: wrap;
+}
+
+.image_div img {
+    width: 100%;
+    margin: auto;
+}
+
+.card-disc {
+    box-shadow: 0 1vw 2vw 0 rgba(0,0,0,0.6);
+    transition: 0.3s;
+    border-radius: .5vw;
+    margin: 0vw .5vw 1vw .5vw;
+    flex: 0 1 24%;
+    max-width: 20%;
+    z-index: 1;
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-position-x: right;
+    background-color: #eeeeee;
+    /*    opacity: 98%;*/
+}
+
+.card-disc-content {
+    padding: .5vw;
+}
+
+.image_div {
+    background-color: #fffafa;
+    box-shadow: 0 .4vw .8vw 0 rgba(0,0,0,0.2);
+    border-radius: .5vw;
+    flex: 0 1 24%;
+    width: 100%;
+/*    opacity: 88%;*/
+}
+
+.card-disc-content h2 {
+    margin-bottom: .5vw;
+    font-weight: bold;
+    color: #1d2351;
+    font-size: 1vw;
+    padding: .2vw;
+}
+
+.card-disc-content p {
+    color: #1d2351;
+    margin: 0vw;
+    font-size: .85vw;
+    font-weight: bolder;
+  
+}
+
+.card-disc button {
+    background-color: #eeeeee;
+    color: #fffafa;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.2vw;
+    padding: .3vw;
+    border-radius: .2vw;
+    width: 100%;
+    margin: .1vw;
+    font-weight: bold;
+}
+
+.card-disc button:hover {
+    background-color: #1d2351;
+}
+
+.addDiscButton {
+    display: flex;
+    margin: auto;
+    margin-top: .35vw;
+    margin-bottom: .35vw;
+    padding: .25vw .4vw .25vw .4vw;
+    font-size: 1.1vw;
+    border-radius: .5vw;
+    background-color: #393e46;
+    color: #3fbdc2;
+    border: .12vw solid #3fbdc2;
+}
+
+.addDiscButton:hover {
+        text-decoration: none;
+        background-color: #3fbdc2;
+        color: black;
+        border: .11vw solid;
+    }
+
+.addDiscContainer {
+    display: flex;
+    width: 19%;
+    margin: auto;
+    align-items: center;
+}
+
+.addDiscContainer h2 {
+    margin: 0vw;
+    font-size: 2vw;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -27,7 +164,8 @@ a {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    background-color:#222831;
 }
 @media (min-width: 768px) {
   html {
@@ -54,13 +192,15 @@ button.accept-policy {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    background-color: #222831;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: #222831;
 }
 .footer {
   position: absolute;
