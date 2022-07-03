@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using eDISC.Models.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eDISC.Controllers
 {
@@ -20,20 +21,23 @@ namespace eDISC.Controllers
         {
             _userRepo = userRepo;
         }
-        
-        
+
+        [Authorize]
         // GET: UserController
         public ActionResult Index()
         {
-            return View();
+            List<User> users = _userRepo.GetAllUsers();
+            return View(users);
         }
 
+        [Authorize]
         // GET: UserController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
+        [Authorize]
         // GET: UserController/Create
         public ActionResult Create()
         {
@@ -47,6 +51,7 @@ namespace eDISC.Controllers
         {
             try
             {
+                user.UserTypeId = 2;
                 _userRepo.AddUser(user);
                 return RedirectToAction("Index");
             }
@@ -56,15 +61,42 @@ namespace eDISC.Controllers
             }
         }
 
+        [Authorize]
+        public ActionResult CreateAdmin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateAdmin(User user)
+        {
+            try
+            {
+                user.UserTypeId = 1;
+                _userRepo.AddUser(user);
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return View(user);
+            }
+        }
+
+        [Authorize]
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            User user = _userRepo.GetUserById(id);
-            if(user == null)
+            //need VM that adds a list of usertypes. 
+
+            UserViewModel vm = new UserViewModel();
+            vm.User = _userRepo.GetUserById(id);
+            if(vm.User == null)
             {
                 return NotFound();
             }
-            return View(user);
+            vm.UserTypes = _userRepo.GetUserTypes();
+            return View(vm);
         }
 
         // POST: UserController/Edit/5
@@ -83,6 +115,7 @@ namespace eDISC.Controllers
             }
         }
 
+        [Authorize]
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -126,7 +159,7 @@ namespace eDISC.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.Role, user.UserTypeId == 1 ? "Admin" : "User"),
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(

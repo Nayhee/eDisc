@@ -16,7 +16,9 @@ namespace eDISC.Models
         [EmailAddress]
         public string Email { get; set; }
 
+        [DisplayName("Type")]
         public int UserTypeId { get; set; }
+        public UserType UserType { get; set; }
 
         public List<Disc> SoldDiscs { get; set; } = new List<Disc>();
 

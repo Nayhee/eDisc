@@ -6,24 +6,31 @@ using eDISC.Models;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using eDISC.Models.ViewModels;
 
 namespace eDISC.Controllers
 {
     public class DiscController : Controller
     {
         private readonly IDiscRepository _discRepo;
+        private readonly IUserRepository _userRepo;
 
-        public DiscController(IDiscRepository discRepo)
+        public DiscController(IDiscRepository discRepo, IUserRepository userRepo)
         {
             _discRepo = discRepo;
+            _userRepo = userRepo;
         }
 
 
         // GET: DiscController
         public ActionResult Index()
         {
-            List<Disc> discs = _discRepo.GetAllDiscsForSale();
-            return View(discs);
+            DiscViewModel vm = new DiscViewModel();
+            vm.Discs = _discRepo.GetAllDiscsForSale();
+            int currentUserId = GetCurrentUserId();
+            vm.User = _userRepo.GetUserById(currentUserId);
+
+            return View(vm);
         }
 
         // GET: DiscController/Details/5

@@ -24,33 +24,7 @@ namespace eDISC.Repositories
         }
 
         
-        public List<User> GetAllAdmins()
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @" SELECT * FROM Users WHERE IsAdmin='Y' ";
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        List<User> admins = new List<User>();
-                        while (reader.Read())
-                        {
-                            User user = new User
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                            };
-                            admins.Add(user);
-                        }
-                        return admins;
-                    }
-                }
-            }
-        }
+       
         public List<User> GetAllUsers()
         {
             using(SqlConnection conn = Connection)
@@ -58,7 +32,9 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" SELECT * FROM Users WHERE IsAdmin='N' ";
+                    cmd.CommandText = @" SELECT u.*, ut.Name as UserTypeName 
+                                        FROM Users u 
+                                        JOIN UserType ut on ut.Id=u.UserTypeId ";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -70,6 +46,11 @@ namespace eDISC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                UserType = new UserType
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                }
                             };
                             users.Add(user);
                         }
@@ -87,7 +68,10 @@ namespace eDISC.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" SELECT * FROM Users WHERE Id=@id";
+                    cmd.CommandText = @" SELECT u.*, ut.Name as UserTypeName 
+                                        FROM Users u 
+                                        JOIN UserType ut on ut.Id=u.UserTypeId
+                                        WHERE u.Id=@id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -100,6 +84,11 @@ namespace eDISC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                UserType = new UserType
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                }
                             };
                             return user;
                         }
@@ -116,10 +105,10 @@ namespace eDISC.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT u.*, ut.Id as UsersTypeId
-                                        FROM users u 
+                    cmd.CommandText = @"SELECT u.*, ut.Name as UserTypeName 
+                                        FROM Users u 
                                         JOIN UserType ut on ut.Id=u.UserTypeId
-                                        WHERE Email = @email";
+                                        WHERE u.Email = @email";
 
                     cmd.Parameters.AddWithValue("@email", email);
 
@@ -133,6 +122,10 @@ namespace eDISC.Repositories
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
                                 UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                UserType = new UserType
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                }
                             };
                             return user;
                         }
@@ -141,6 +134,34 @@ namespace eDISC.Repositories
                 }
             }
         }
+
+        public List<UserType> GetUserTypes()
+        {
+            using(SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" SELECT * FROM UserType";
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        List<UserType> userTypes = new List<UserType>();
+                        while (reader.Read())
+                        {
+                            UserType userType = new UserType
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            };
+                            userTypes.Add(userType);
+                        }
+                        return userTypes;
+                    }
+                }
+            }
+        }
+
         public void AddUser(User user)
         {
             using (SqlConnection conn = Connection)
@@ -148,11 +169,12 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Users ([Name], Email)
+                    cmd.CommandText = @"INSERT INTO Users ([Name], Email, UserTypeId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@name, @email)";
+                                        VALUES (@name, @email, @userTypeId)";
                     cmd.Parameters.AddWithValue("@name", user.Name);
                     cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
                     int id = (int)cmd.ExecuteScalar();
                     user.Id = id;
                 }
@@ -170,9 +192,11 @@ namespace eDISC.Repositories
                                         SET 
                                             [Name] = @name, 
                                             Email = @email, 
+                                            UserTypeId = @userTypeId
                                         WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@name", user.Name);
                     cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
                     cmd.Parameters.AddWithValue("@id", user.Id);
 
                     cmd.ExecuteNonQuery();

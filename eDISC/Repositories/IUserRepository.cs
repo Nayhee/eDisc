@@ -9,6 +9,7 @@ namespace eDISC.Repositories
         List<User> GetAllUsers();
         User GetUserById(int id);
         User GetUserByEmail(string email);
+        List<UserType> GetUserTypes();
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
