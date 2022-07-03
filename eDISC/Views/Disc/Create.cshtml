@@ -1,4 +1,4 @@
-﻿@model eDISC.Models.Disc
+﻿@model eDISC.Models.ViewModels.DiscCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,64 +13,72 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Disc.Name" class="control-label"></label>
+                <input asp-for="Disc.Name" class="form-control" />
+                <span asp-validation-for="Disc.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <input asp-for="BrandId" class="form-control" />
-                <span asp-validation-for="BrandId" class="text-danger"></span>
+                <label asp-for="Disc.BrandId" class="control-label"></label>
+                <select asp-for="Disc.BrandId" class="form-control">
+                        <option value="">Select Brand</option>
+                        @foreach(Brand brand in Model.Brands)
+                        {
+                            <option value="@brand.Id">@brand.Name</option>
+                        }
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="Condition" class="control-label"></label>
-                <input asp-for="Condition" class="form-control" />
-                <span asp-validation-for="Condition" class="text-danger"></span>
+                <label asp-for="Disc.Condition" class="control-label"></label>
+                <select asp-for="Disc.Condition" class="form-control">
+                        <option value="">Select Condition</option>
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="Speed" class="control-label"></label>
-                <input asp-for="Speed" class="form-control" />
-                <span asp-validation-for="Speed" class="text-danger"></span>
+                <label asp-for="Disc.Speed" class="control-label"></label>
+                <input asp-for="Disc.Speed" class="form-control" />
+                <span asp-validation-for="Disc.Speed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Glide" class="control-label"></label>
-                <input asp-for="Glide" class="form-control" />
-                <span asp-validation-for="Glide" class="text-danger"></span>
+                <label asp-for="Disc.Glide" class="control-label"></label>
+                <input asp-for="Disc.Glide" class="form-control" />
+                <span asp-validation-for="Disc.Glide" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Turn" class="control-label"></label>
-                <input asp-for="Turn" class="form-control" />
-                <span asp-validation-for="Turn" class="text-danger"></span>
+                <label asp-for="Disc.Turn" class="control-label"></label>
+                <input asp-for="Disc.Turn" class="form-control" />
+                <span asp-validation-for="Disc.Turn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fade" class="control-label"></label>
-                <input asp-for="Fade" class="form-control" />
-                <span asp-validation-for="Fade" class="text-danger"></span>
+                <label asp-for="Disc.Fade" class="control-label"></label>
+                <input asp-for="Disc.Fade" class="form-control" />
+                <span asp-validation-for="Disc.Fade" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Plastic" class="control-label"></label>
-                <input asp-for="Plastic" class="form-control" />
-                <span asp-validation-for="Plastic" class="text-danger"></span>
+                <label asp-for="Disc.Plastic" class="control-label"></label>
+                <input asp-for="Disc.Plastic" class="form-control" />
+                <span asp-validation-for="Disc.Plastic" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="Disc.Price" class="control-label"></label>
+                <input asp-for="Disc.Price" class="form-control" />
+                <span asp-validation-for="Disc.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
+                <label asp-for="Disc.Weight" class="control-label"></label>
+                <input asp-for="Disc.Weight" class="form-control" />
+                <span asp-validation-for="Disc.Weight" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label asp-for="Disc.ImageUrl" class="control-label"></label>
+                <input asp-for="Disc.ImageUrl" class="form-control" />
+                <span asp-validation-for="Disc.ImageUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Disc.Description" class="control-label"></label>
+                <input asp-for="Disc.Description" class="form-control" />
+                <span asp-validation-for="Disc.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

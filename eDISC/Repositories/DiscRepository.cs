@@ -20,6 +20,8 @@ namespace eDISC.Repositories
             }
         }
 
+       
+
         public List<Tag> GetADiscsTags(Disc disc)
         {
             using (SqlConnection conn = Connection)
@@ -238,6 +240,33 @@ namespace eDISC.Repositories
                     cmd.CommandText = @" DELETE FROM Discs WHERE Id=@id";
                     cmd.Parameters.AddWithValue("@id", discId);
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<Brand> GetAllBrands()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" Select * FROM Brands";
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        List<Brand> brands = new List<Brand>();
+                        while (reader.Read())
+                        {
+                            Brand brand = new Brand
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            };
+                            brands.Add(brand);
+                        }
+                        return brands;
+                    }
                 }
             }
         }

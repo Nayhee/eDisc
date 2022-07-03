@@ -8,6 +8,7 @@ namespace eDISC.Repositories
     {
         List<Disc> GetAllDiscsForSale();
         Disc GetDiscById(int id);
+        List<Brand> GetAllBrands();
         void AddDisc(Disc disc);
         void UpdateDisc(Disc disc);
         void DeleteDisc(int id);

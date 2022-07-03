@@ -48,7 +48,11 @@ namespace eDISC.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            return View();
+            DiscCreateViewModel vm = new DiscCreateViewModel();
+            vm.Disc = new Disc();
+            vm.Brands = _discRepo.GetAllBrands();
+            
+            return View(vm);
         }
 
         // POST: DiscController/Create
@@ -58,6 +62,7 @@ namespace eDISC.Controllers
         {
             try
             {
+                disc.DiscTypeId = 1;
                 _discRepo.AddDisc(disc);
                 return RedirectToAction("Index");
             }
