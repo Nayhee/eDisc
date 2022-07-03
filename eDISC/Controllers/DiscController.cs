@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using eDISC.Models;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace eDISC.Controllers
 {
@@ -36,6 +38,7 @@ namespace eDISC.Controllers
         }
 
         // GET: DiscController/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -105,6 +108,12 @@ namespace eDISC.Controllers
             {
                 return View(disc);
             }
+        }
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }

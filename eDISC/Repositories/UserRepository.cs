@@ -116,7 +116,10 @@ namespace eDISC.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT * FROM Users WHERE Email = @email";
+                    cmd.CommandText = @"SELECT u.*, ut.Id as UsersTypeId
+                                        FROM users u 
+                                        JOIN UserType ut on ut.Id=u.UserTypeId
+                                        WHERE Email = @email";
 
                     cmd.Parameters.AddWithValue("@email", email);
 
@@ -129,6 +132,7 @@ namespace eDISC.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
                             };
                             return user;
                         }

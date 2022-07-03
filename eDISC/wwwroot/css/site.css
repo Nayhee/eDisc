@@ -9,6 +9,31 @@ for details on configuring this project to bundle and minify static web assets. 
 
 */
 
+.loginHeader {
+    color: aqua;
+}
+
+.flightNumsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+.flightNum {
+    background-color: orange;
+    color: black;
+    font-weight: bold;
+    padding: .5vw;
+    margin: .5vw .1vw .5vw .1vw;
+    border-radius: 100%;
+    width: 2.5vw;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+
+
 .homeHeader {
     color: #3fbdc2;
     display: flex;
@@ -48,15 +73,22 @@ for details on configuring this project to bundle and minify static web assets. 
     box-shadow: 0 1vw 2vw 0 rgba(0,0,0,0.6);
     transition: 0.3s;
     border-radius: .5vw;
-    margin: 0vw .5vw 1vw .5vw;
+    margin: 0vw .2vw 1vw .2vw;
     flex: 0 1 24%;
-    max-width: 20%;
+    max-width: 25%;
     z-index: 1;
     background-blend-mode: overlay;
     background-repeat: no-repeat;
     background-position-x: right;
     background-color: #eeeeee;
     /*    opacity: 98%;*/
+}
+
+.card-disc-name {
+    font-size: 1.25vw;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 .card-disc-content {
@@ -94,7 +126,7 @@ for details on configuring this project to bundle and minify static web assets. 
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.2vw;
+    font-size: 1.4vw;
     padding: .3vw;
     border-radius: .2vw;
     width: 100%;
@@ -137,6 +169,18 @@ for details on configuring this project to bundle and minify static web assets. 
     margin: 0vw;
     font-size: 2vw;
 }
+
+
+.detailsButtonsContainer {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+
+
+
+
 
 a.navbar-brand {
   white-space: normal;
