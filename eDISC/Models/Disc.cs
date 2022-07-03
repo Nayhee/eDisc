@@ -36,6 +36,8 @@ namespace eDISC.Models
 
         public string Description { get; set; }
 
+        [Required]
+        [DisplayName("Type")]
         public int DiscTypeId { get; set; }
       
         public DiscType DiscType { get; set; }
