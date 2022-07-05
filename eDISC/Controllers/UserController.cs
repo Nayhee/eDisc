@@ -37,7 +37,7 @@ namespace eDISC.Controllers
             return View();
         }
 
-        [Authorize]
+        
         // GET: UserController/Create
         public ActionResult Create()
         {
