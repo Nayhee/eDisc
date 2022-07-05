@@ -1,14 +1,14 @@
-﻿@model eDISC.Models.ViewModels.DiscViewModel
+﻿@model IEnumerable<eDISC.Models.Disc>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1 class="discsHeader">All Discs</h1>
+<h1 class="discsHeader">Discs For Sale</h1>
 
 
 <div class="discList">
-    @foreach(var item in Model.Discs)
+    @foreach(var item in Model)
     {
         <div class="card-disc">
             <div class="card-disc-content">
@@ -33,12 +33,6 @@
     }
 </div>
 
-@if(Model.User.UserTypeId == 1)
-{
-    <p class="addDiscContainer">
-        <a class="addDiscButton" asp-action="Create">Add Disc</a>
-    </p>
-}
 
 
          

@@ -25,12 +25,13 @@ namespace eDISC.Controllers
         // GET: DiscController
         public ActionResult Index()
         {
-            DiscViewModel vm = new DiscViewModel();
-            vm.Discs = _discRepo.GetAllDiscsForSale();
-            int currentUserId = GetCurrentUserId();
-            vm.User = _userRepo.GetUserById(currentUserId);
+            //DiscViewModel vm = new DiscViewModel();
+            List<Disc> discs = _discRepo.GetAllDiscsForSale();
+            
+            //int currentUserId = GetCurrentUserId();
+            //vm.User = _userRepo.GetUserById(currentUserId);
 
-            return View(vm);
+            return View(discs);
         }
 
         // GET: DiscController/Details/5
@@ -121,6 +122,10 @@ namespace eDISC.Controllers
                 return View(disc);
             }
         }
+
+       
+
+
 
         private int GetCurrentUserId()
         {

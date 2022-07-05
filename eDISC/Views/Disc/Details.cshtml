@@ -27,7 +27,7 @@
        
             <p class="card-text">Price: $@Model.Price </p>
 
-            <a asp-action="Cart">ADD TO CART</a>
+            <a asp-action="AddToCart" asp-route-id="@Model.Id">ADD TO CART</a>
         </div>
     </div>
     
