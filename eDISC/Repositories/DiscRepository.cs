@@ -22,38 +22,6 @@ namespace eDISC.Repositories
         }
 
 
-        public List<Tag> GetADiscsTags(Disc disc)
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @" Select t.Id, t.Name 
-                                        FROM DiscTags dt 
-                                        JOIN Tags t on t.Id=dt.TagId 
-                                        JOIN Discs d on d.Id=dt.DiscId 
-                                        Where d.Id=@id
-                    ";
-                    cmd.Parameters.AddWithValue("@id", disc.Id);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        List<Tag> tags = new List<Tag>();
-                        while(reader.Read())
-                        {
-                            Tag tag = new Tag
-                            {
-                                Id = DbUtils.GetInt(reader, "Id"),
-                                Name = DbUtils.GetString(reader, "Name"),
-                            };
-                            tags.Add(tag);
-                        }
-                        return tags;
-                    }
-                }
-            }
-        }
         
         public List<Disc> GetAllDiscsForSale()
         {
@@ -63,7 +31,7 @@ namespace eDISC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
-                                        FROM Discs d 
+                                        FROM Disc d 
                                         JOIN Brands b on b.Id=d.BrandId
                                         WHERE d.DiscTypeId=1";
 
@@ -94,9 +62,6 @@ namespace eDISC.Repositories
                                     Name = DbUtils.GetString(reader, "BrandName"),
                                 }
                             };
-                            var tags = GetADiscsTags(disc);
-                            disc.Tags = tags;
-
                             discs.Add(disc);
                         }
                         return discs;
@@ -111,47 +76,61 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
-                                        FROM Discs d 
+                    cmd.CommandText = @"SELECT d.*, 
+                                        b.Id as BrandsId, b.Name as BrandName,
+                                        t.Id as TagsId, t.Name as TagName
+                                        FROM Disc d 
                                         JOIN Brands b on b.Id=d.BrandId
+                                        JOIN DiscTags dt on dt.DiscId=d.Id
+                                        JOIN Tags t on t.Id=dt.TagId
                                         WHERE d.Id=@id
                     ";
-                    cmd.Parameters.AddWithValue("@id", id);
+                    DbUtils.AddParameter(cmd, "@id", id);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if(reader.Read())
+                        Disc disc = null;
+                        while (reader.Read())
                         {
-                            Disc disc = new Disc
+                            int discId = DbUtils.GetInt(reader, "Id");
+
+                            if (disc == null)
                             {
-                                Id = DbUtils.GetInt(reader, "Id"),
-                                Name = DbUtils.GetString(reader, "Name"),
-                                BrandId = DbUtils.GetInt(reader, "BrandId"),
-                                Condition = DbUtils.GetString(reader, "Condition"),
-                                Speed = DbUtils.GetInt(reader, "Speed"),
-                                Glide = DbUtils.GetInt(reader, "Glide"),
-                                Turn = DbUtils.GetInt(reader, "Turn"),
-                                Fade = DbUtils.GetInt(reader, "Fade"),
-                                Plastic = DbUtils.GetString(reader, "Plastic"),
-                                Price = DbUtils.GetInt(reader, "Price"),
-                                Weight = DbUtils.GetInt(reader, "Weight"),
-                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
-                                DiscTypeId = DbUtils.GetInt(reader, "DiscTypeId"),
-                                Description = DbUtils.GetString(reader, "Description"),
-                                Brand = new Brand()
+                                disc = new Disc()
                                 {
-                                    Id = DbUtils.GetInt(reader, "BrandsId"),
-                                    Name = DbUtils.GetString(reader, "BrandName"),
-                                }
-                            };
-                            var tags = GetADiscsTags(disc);
-                            disc.Tags = tags;
-                            return disc;
+                                    Id = DbUtils.GetInt(reader, "Id"),
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                    Condition = DbUtils.GetString(reader, "Condition"),
+                                    Speed = DbUtils.GetInt(reader, "Speed"),
+                                    Glide = DbUtils.GetInt(reader, "Glide"),
+                                    Turn = DbUtils.GetInt(reader, "Turn"),
+                                    Fade = DbUtils.GetInt(reader, "Fade"),
+                                    Plastic = DbUtils.GetString(reader, "Plastic"),
+                                    Price = DbUtils.GetInt(reader, "Price"),
+                                    Weight = DbUtils.GetInt(reader, "Weight"),
+                                    ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                    DiscTypeId = DbUtils.GetInt(reader, "DiscTypeId"),
+                                    Description = DbUtils.GetString(reader, "Description"),
+                                    Brand = new Brand()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "BrandsId"),
+                                        Name = DbUtils.GetString(reader, "BrandName"),
+                                    },
+                                    Tags = new List<Tag>()
+                                };
+                            }
+                            if(DbUtils.IsNotDbNull(reader, "TagsId"))
+                            {
+                                disc.Tags.Add(new Tag()
+                                {
+                                    Id = DbUtils.GetInt(reader, "TagsId"),
+                                    Name = DbUtils.GetString(reader, "TagName")
+                                });
+                            }
+
                         }
-                        else
-                        {
-                            return null;
-                        }
+                        return disc;
                     }
                 }
             }
@@ -164,7 +143,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Discs ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight, Description, DiscTypeId)
+                    cmd.CommandText = @"INSERT INTO Disc ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight, Description, DiscTypeId)
                                         OUTPUT INSERTED.ID
                                         VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight, @description, @discTypeId)";
                     DbUtils.AddParameter(cmd, "@name", disc.Name);
@@ -194,7 +173,7 @@ namespace eDISC.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"UPDATE Discs
+                    cmd.CommandText = @"UPDATE Disc
                                         SET 
                                             [Name] = @name, 
                                             BrandId = @brandId,
@@ -237,7 +216,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" DELETE FROM Discs WHERE Id=@id";
+                    cmd.CommandText = @" DELETE FROM Disc WHERE Id=@id";
                     DbUtils.AddParameter(cmd, "@id", discId);
                     cmd.ExecuteNonQuery();
                 }
@@ -270,6 +249,40 @@ namespace eDISC.Repositories
                 }
             }
         }
+
+
+        //public List<Tag> GetADiscsTags(Disc disc)
+        //{
+        //    using (SqlConnection conn = Connection)
+        //    {
+        //        conn.Open();
+        //        using (SqlCommand cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandText = @" Select t.Id, t.Name 
+        //                                FROM DiscTags dt 
+        //                                JOIN Tags t on t.Id=dt.TagId 
+        //                                JOIN Discs d on d.Id=dt.DiscId 
+        //                                Where d.Id=@id
+        //            ";
+        //            cmd.Parameters.AddWithValue("@id", disc.Id);
+
+        //            using (SqlDataReader reader = cmd.ExecuteReader())
+        //            {
+        //                List<Tag> tags = new List<Tag>();
+        //                while(reader.Read())
+        //                {
+        //                    Tag tag = new Tag
+        //                    {
+        //                        Id = DbUtils.GetInt(reader, "Id"),
+        //                        Name = DbUtils.GetString(reader, "Name"),
+        //                    };
+        //                    tags.Add(tag);
+        //                }
+        //                return tags;
+        //            }
+        //        }
+        //    }
+        //}
 
     }
 }
