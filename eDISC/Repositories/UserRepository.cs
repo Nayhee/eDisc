@@ -1,4 +1,5 @@
 ﻿using eDISC.Models;
+using eDISC.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -43,13 +44,13 @@ namespace eDISC.Repositories
                         {
                             User user = new User
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
                                 UserType = new UserType
                                 {
-                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                    Name = DbUtils.GetString(reader, "UserTypeName"),
                                 }
                             };
                             users.Add(user);
@@ -79,15 +80,15 @@ namespace eDISC.Repositories
                     {
                         if (reader.Read())
                         {
-                            User user = new User()
+                            User user = new User
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
                                 UserType = new UserType
                                 {
-                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                    Name = DbUtils.GetString(reader, "UserTypeName"),
                                 }
                             };
                             return user;
@@ -116,15 +117,15 @@ namespace eDISC.Repositories
                     {
                         if (reader.Read())
                         {
-                            User user = new User()
+                            User user = new User
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
                                 UserType = new UserType
                                 {
-                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                    Name = DbUtils.GetString(reader, "UserTypeName"),
                                 }
                             };
                             return user;
@@ -151,8 +152,8 @@ namespace eDISC.Repositories
                         {
                             UserType userType = new UserType
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
                             };
                             userTypes.Add(userType);
                         }
@@ -172,9 +173,9 @@ namespace eDISC.Repositories
                     cmd.CommandText = @"INSERT INTO Users ([Name], Email, UserTypeId)
                                         OUTPUT INSERTED.ID
                                         VALUES (@name, @email, @userTypeId)";
-                    cmd.Parameters.AddWithValue("@name", user.Name);
-                    cmd.Parameters.AddWithValue("@email", user.Email);
-                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
+                    DbUtils.AddParameter(cmd, "@name", user.Name);
+                    DbUtils.AddParameter(cmd, "@email", user.Email);
+                    DbUtils.AddParameter(cmd,"@userTypeId", user.UserTypeId);
                     int id = (int)cmd.ExecuteScalar();
                     user.Id = id;
                 }
@@ -194,10 +195,10 @@ namespace eDISC.Repositories
                                             Email = @email, 
                                             UserTypeId = @userTypeId
                                         WHERE Id = @id";
-                    cmd.Parameters.AddWithValue("@name", user.Name);
-                    cmd.Parameters.AddWithValue("@email", user.Email);
-                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
-                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    DbUtils.AddParameter(cmd, "@name", user.Name);
+                    DbUtils.AddParameter(cmd, "@email", user.Email);
+                    DbUtils.AddParameter(cmd, "@userTypeId", user.UserTypeId);
+                    DbUtils.AddParameter(cmd, "@id", user.Id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -211,7 +212,7 @@ namespace eDISC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @" DELETE FROM Users WHERE Id=@id";
-                    cmd.Parameters.AddWithValue("@id", userId);
+                    DbUtils.AddParameter(cmd, "@id", userId);
                     cmd.ExecuteNonQuery();
                 }
             }

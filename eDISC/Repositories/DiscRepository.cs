@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using eDISC.Utils;
 
 namespace eDISC.Repositories
 {
@@ -20,7 +21,6 @@ namespace eDISC.Repositories
             }
         }
 
-       
 
         public List<Tag> GetADiscsTags(Disc disc)
         {
@@ -44,8 +44,8 @@ namespace eDISC.Repositories
                         {
                             Tag tag = new Tag
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
                             };
                             tags.Add(tag);
                         }
@@ -62,7 +62,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT d.*, b.Name as BrandName 
+                    cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
                                         FROM Discs d 
                                         JOIN Brands b on b.Id=d.BrandId
                                         WHERE d.DiscTypeId=1";
@@ -74,23 +74,24 @@ namespace eDISC.Repositories
                         {
                             Disc disc = new Disc
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                BrandId = reader.GetInt32(reader.GetOrdinal("BrandId")),
-                                Condition = reader.GetString(reader.GetOrdinal("Condition")),
-                                Speed = reader.GetInt32(reader.GetOrdinal("Speed")),
-                                Glide = reader.GetInt32(reader.GetOrdinal("Glide")),
-                                Turn = reader.GetInt32(reader.GetOrdinal("Turn")),
-                                Fade = reader.GetInt32(reader.GetOrdinal("Fade")),
-                                Plastic = reader.GetString(reader.GetOrdinal("Plastic")),
-                                Price = reader.GetInt32(reader.GetOrdinal("Price")),
-                                Weight = reader.GetInt32(reader.GetOrdinal("Weight")),
-                                ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                                DiscTypeId = reader.GetInt32(reader.GetOrdinal("DiscTypeId")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Condition = DbUtils.GetString(reader, "Condition"),
+                                Speed = DbUtils.GetInt(reader, "Speed"),
+                                Glide = DbUtils.GetInt(reader, "Glide"),
+                                Turn = DbUtils.GetInt(reader, "Turn"),
+                                Fade = DbUtils.GetInt(reader, "Fade"),
+                                Plastic = DbUtils.GetString(reader, "Plastic"),
+                                Price = DbUtils.GetInt(reader, "Price"),
+                                Weight = DbUtils.GetInt(reader, "Weight"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                DiscTypeId = DbUtils.GetInt(reader, "DiscTypeId"),
+                                Description = DbUtils.GetString(reader, "Description"),
                                 Brand = new Brand()
                                 {
-                                    Name = reader.GetString(reader.GetOrdinal("BrandName"))
+                                    Id = DbUtils.GetInt(reader, "BrandsId"),
+                                    Name = DbUtils.GetString(reader, "BrandName"),
                                 }
                             };
                             var tags = GetADiscsTags(disc);
@@ -123,24 +124,24 @@ namespace eDISC.Repositories
                         {
                             Disc disc = new Disc
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("name")),
-                                BrandId = reader.GetInt32(reader.GetOrdinal("BrandId")),
-                                Condition = reader.GetString(reader.GetOrdinal("Condition")),
-                                Speed = reader.GetInt32(reader.GetOrdinal("Speed")),
-                                Glide = reader.GetInt32(reader.GetOrdinal("Glide")),
-                                Turn = reader.GetInt32(reader.GetOrdinal("Turn")),
-                                Fade = reader.GetInt32(reader.GetOrdinal("Fade")),
-                                Plastic = reader.GetString(reader.GetOrdinal("Plastic")),
-                                Price = reader.GetInt32(reader.GetOrdinal("Price")),
-                                ImageUrl = reader.GetString(reader.GetOrdinal("ImageURL")),
-                                Weight = reader.GetInt32(reader.GetOrdinal("Weight")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                DiscTypeId = reader.GetInt32(reader.GetOrdinal("DiscTypeId")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Condition = DbUtils.GetString(reader, "Condition"),
+                                Speed = DbUtils.GetInt(reader, "Speed"),
+                                Glide = DbUtils.GetInt(reader, "Glide"),
+                                Turn = DbUtils.GetInt(reader, "Turn"),
+                                Fade = DbUtils.GetInt(reader, "Fade"),
+                                Plastic = DbUtils.GetString(reader, "Plastic"),
+                                Price = DbUtils.GetInt(reader, "Price"),
+                                Weight = DbUtils.GetInt(reader, "Weight"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                DiscTypeId = DbUtils.GetInt(reader, "DiscTypeId"),
+                                Description = DbUtils.GetString(reader, "Description"),
                                 Brand = new Brand()
                                 {
-                                    Id = reader.GetInt32(reader.GetOrdinal("BrandsId")),
-                                    Name = reader.GetString(reader.GetOrdinal("BrandName"))
+                                    Id = DbUtils.GetInt(reader, "BrandsId"),
+                                    Name = DbUtils.GetString(reader, "BrandName"),
                                 }
                             };
                             var tags = GetADiscsTags(disc);
@@ -166,19 +167,19 @@ namespace eDISC.Repositories
                     cmd.CommandText = @"INSERT INTO Discs ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight, Description, DiscTypeId)
                                         OUTPUT INSERTED.ID
                                         VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight, @description, @discTypeId)";
-                    cmd.Parameters.AddWithValue("@name", disc.Name);
-                    cmd.Parameters.AddWithValue("@brandId", disc.BrandId);
-                    cmd.Parameters.AddWithValue("@condition", disc.Condition);
-                    cmd.Parameters.AddWithValue("@speed", disc.Speed);
-                    cmd.Parameters.AddWithValue("@glide", disc.Glide);
-                    cmd.Parameters.AddWithValue("@turn", disc.Turn);
-                    cmd.Parameters.AddWithValue("@fade", disc.Fade);
-                    cmd.Parameters.AddWithValue("@plastic", disc.Plastic);
-                    cmd.Parameters.AddWithValue("@price", disc.Price);
-                    cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
-                    cmd.Parameters.AddWithValue("@weight", disc.Weight);
-                    cmd.Parameters.AddWithValue("@description", disc.Description);
-                    cmd.Parameters.AddWithValue("@discTypeId", disc.DiscTypeId);
+                    DbUtils.AddParameter(cmd, "@name", disc.Name);
+                    DbUtils.AddParameter(cmd,"@brandId", disc.BrandId);
+                    DbUtils.AddParameter(cmd,"@condition", disc.Condition);
+                    DbUtils.AddParameter(cmd,"@speed", disc.Speed);
+                    DbUtils.AddParameter(cmd,"@glide", disc.Glide);
+                    DbUtils.AddParameter(cmd,"@turn", disc.Turn);
+                    DbUtils.AddParameter(cmd,"@fade", disc.Fade);
+                    DbUtils.AddParameter(cmd,"@plastic", disc.Plastic);
+                    DbUtils.AddParameter(cmd,"@price", disc.Price);
+                    DbUtils.AddParameter(cmd,"@imageURL", disc.ImageUrl);
+                    DbUtils.AddParameter(cmd,"@weight", disc.Weight);
+                    DbUtils.AddParameter(cmd,"@description", disc.Description);
+                    DbUtils.AddParameter(cmd,"@discTypeId", disc.DiscTypeId);
 
                     int id = (int)cmd.ExecuteScalar();
                     disc.Id = id;
@@ -211,20 +212,19 @@ namespace eDISC.Repositories
                                                
                                             WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@name", disc.Name);
-                    cmd.Parameters.AddWithValue("@brandId", disc.BrandId);
-                    cmd.Parameters.AddWithValue("@condition", disc.Condition);
-                    cmd.Parameters.AddWithValue("@speed", disc.Speed);
-                    cmd.Parameters.AddWithValue("@glide", disc.Glide);
-                    cmd.Parameters.AddWithValue("@turn", disc.Turn);
-                    cmd.Parameters.AddWithValue("@fade", disc.Fade);
-                    cmd.Parameters.AddWithValue("@plastic", disc.Plastic);
-                    cmd.Parameters.AddWithValue("@price", disc.Price);
-                    cmd.Parameters.AddWithValue("@imageURL", disc.ImageUrl);
-                    cmd.Parameters.AddWithValue("@weight", disc.Weight);
-                    cmd.Parameters.AddWithValue("@id", disc.Id);
-                    cmd.Parameters.AddWithValue("@description", disc.Description);
-                    cmd.Parameters.AddWithValue("@discTypeId", disc.DiscTypeId);
+                    DbUtils.AddParameter(cmd, "@name", disc.Name);
+                    DbUtils.AddParameter(cmd, "@brandId", disc.BrandId);
+                    DbUtils.AddParameter(cmd, "@condition", disc.Condition);
+                    DbUtils.AddParameter(cmd, "@speed", disc.Speed);
+                    DbUtils.AddParameter(cmd, "@glide", disc.Glide);
+                    DbUtils.AddParameter(cmd, "@turn", disc.Turn);
+                    DbUtils.AddParameter(cmd, "@fade", disc.Fade);
+                    DbUtils.AddParameter(cmd, "@plastic", disc.Plastic);
+                    DbUtils.AddParameter(cmd, "@price", disc.Price);
+                    DbUtils.AddParameter(cmd, "@imageURL", disc.ImageUrl);
+                    DbUtils.AddParameter(cmd, "@weight", disc.Weight);
+                    DbUtils.AddParameter(cmd, "@description", disc.Description);
+                    DbUtils.AddParameter(cmd, "@discTypeId", disc.DiscTypeId);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -238,7 +238,7 @@ namespace eDISC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @" DELETE FROM Discs WHERE Id=@id";
-                    cmd.Parameters.AddWithValue("@id", discId);
+                    DbUtils.AddParameter(cmd, "@id", discId);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -260,8 +260,8 @@ namespace eDISC.Repositories
                         {
                             Brand brand = new Brand
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
                             };
                             brands.Add(brand);
                         }
