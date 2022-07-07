@@ -22,5 +22,7 @@ namespace eDISC.Models
 
         public List<Disc> SoldDiscs { get; set; } = new List<Disc>();
 
+        public Cart Cart { get; set; }
+
     }
 }

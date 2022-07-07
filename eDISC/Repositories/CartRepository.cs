@@ -1,4 +1,5 @@
 ﻿using eDISC.Models;
+using eDISC.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace eDISC.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
 
         public List<Disc> GetACartsDiscs(Cart cart) //func may not be right
         {
@@ -81,7 +83,7 @@ namespace eDISC.Repositories
                     cmd.CommandText = @"SELECT c.*, u.id as UsersId, u.Name
                                         FROM Cart c 
                                         JOIN Users u on u.Id=c.UserId
-                                        WHERE d.Id=@id
+                                        WHERE c.Id=@id
                     ";
                     cmd.Parameters.AddWithValue("@id", cartId);
 
@@ -110,6 +112,44 @@ namespace eDISC.Repositories
                 }
             }
         }
-   
+
+        public void AddCart(Cart cart)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" INSERT INTO Cart (UserId)
+                                          OUTPUT INSERTED.ID
+                                          VALUES (@userId";
+                    DbUtils.AddParameter(cmd, "@userId", cart.UserId);
+
+                    int id = (int)cmd.ExecuteScalar();
+                    cart.Id = id;
+                }
+            }
+        }
+
+        public void AddDiscToCart(int cartId, int discId, int userId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" INSERT INTO CartDisc (CartId, DiscId, UserId)
+                                          OUTPUT INSERTED.ID
+                                          VALUES (@cartId, @discId, @userId);";
+                    DbUtils.AddParameter(cmd, "@cartId", cartId);
+                    DbUtils.AddParameter(cmd, "@discId", discId);
+                    DbUtils.AddParameter(cmd, "@userId", userId);
+
+                    cmd.ExecuteScalar();
+                    
+                }
+            }
+        }
+
     }
 }

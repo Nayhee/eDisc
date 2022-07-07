@@ -16,11 +16,21 @@ namespace eDISC.Controllers
         private readonly IDiscRepository _discRepo;
         private readonly IUserRepository _userRepo;
 
-        //public ActionResult AddToCart(int id)
-        //{
-        //    //they are viewing details and click add to cart for the disc they want to buy. 
-        //    //ID gets passed here, then  I add product to cart and return view to the same details page. 
-        //}
+        public ActionResult AddToCart(int id)
+        {
+            //first see if they already have a cart.
+            //if they do, add disc to that cart. Otherwise 
+            int userId = GetCurrentUserId();
+            Disc discToAdd = _discRepo.GetDiscById(id);
+            //they are viewing details and click add to cart for the disc they want to buy. 
+            //ID gets passed here, then  I add product to cart and return view to the same details page. 
+        }
+
+        public ActionResult Cart(Cart cart) //not sure what to pass in 
+        {
+
+            return View(cart);
+        }
 
         // GET: CartController
         public ActionResult Index()
@@ -33,7 +43,7 @@ namespace eDISC.Controllers
         }
 
        
-
+        //DONT THINK I NEED THIS
         // GET: CartController/Create
         public ActionResult Create()
         {
@@ -43,7 +53,7 @@ namespace eDISC.Controllers
         // POST: CartController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(int id)
         {
             try
             {
@@ -95,6 +105,12 @@ namespace eDISC.Controllers
             {
                 return View();
             }
+        }
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
