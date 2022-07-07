@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace eDISC.Repositories
 {
-    public class CartRepository : ICartRepository
+    public class CartRepository : ICartRepository, ICartRepository
     {
         private readonly IConfiguration _config;
 
@@ -22,6 +22,8 @@ namespace eDISC.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
+
+        public Cart GetUsersMostRecentCart
 
 
         public List<Disc> GetACartsDiscs(Cart cart) //func may not be right
@@ -146,7 +148,7 @@ namespace eDISC.Repositories
                     DbUtils.AddParameter(cmd, "@userId", userId);
 
                     cmd.ExecuteScalar();
-                    
+
                 }
             }
         }

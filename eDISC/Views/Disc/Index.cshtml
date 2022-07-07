@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eDISC.Models.Disc>
+﻿@model eDISC.Models.ViewModels.DiscCartViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,7 +8,7 @@
 
 
 <div class="discList">
-    @foreach(var item in Model)
+    @foreach(var item in Model.Discs)
     {
         <div class="card-disc">
             <div class="card-disc-content">
@@ -27,6 +27,7 @@
           
                 <div class="detailsButtonsContainer">
                     <p class="cardDiscButton"> @Html.ActionLink("Details", "Details", new { id=item.Id }) </p>
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-CartId="@Model.Cart.Id" class="btn btn-outline-primary mx-1" title="Details">Details</a>
                 </div>
             </div>
       </div>

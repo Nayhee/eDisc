@@ -16,15 +16,26 @@ namespace eDISC.Controllers
         private readonly IDiscRepository _discRepo;
         private readonly IUserRepository _userRepo;
 
-        public ActionResult AddToCart(int id)
+        public ActionResult AddToCart(int id, int CartId)
         {
-            //first see if they already have a cart.
-            //if they do, add disc to that cart. Otherwise 
-            int userId = GetCurrentUserId();
+            //might need to put a try here
             Disc discToAdd = _discRepo.GetDiscById(id);
-            //they are viewing details and click add to cart for the disc they want to buy. 
-            //ID gets passed here, then  I add product to cart and return view to the same details page. 
+            int currentUserId = GetCurrentUserId();
+            _discRepo.AddDiscToCart(CartId, id, currentUserId );
+
+            return RedirectToAction("Disc", "Details", new { id = id });
+
         }
+        
+        //public ActionResult AddToCart(int id)
+        //{
+        //    //first see if they already have a cart.
+        //    //if they do, add disc to that cart. Otherwise 
+        //    int userId = GetCurrentUserId();
+        //    Disc discToAdd = _discRepo.GetDiscById(id);
+        //    //they are viewing details and click add to cart for the disc they want to buy. 
+        //    //ID gets passed here, then  I add product to cart and return view to the same details page. 
+        //}
 
         public ActionResult Cart(Cart cart) //not sure what to pass in 
         {

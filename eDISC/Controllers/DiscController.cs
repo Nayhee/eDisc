@@ -14,24 +14,28 @@ namespace eDISC.Controllers
     {
         private readonly IDiscRepository _discRepo;
         private readonly IUserRepository _userRepo;
+        private readonly ICartRepository _cartRepo;
 
-        public DiscController(IDiscRepository discRepo, IUserRepository userRepo)
+        public DiscController(IDiscRepository discRepo, IUserRepository userRepo, ICartRepository cartRepo)
         {
             _discRepo = discRepo;
             _userRepo = userRepo;
+            _cartRepo = cartRepo;
         }
 
 
         // GET: DiscController
         public ActionResult Index()
         {
-            //DiscViewModel vm = new DiscViewModel();
-            List<Disc> discs = _discRepo.GetAllDiscsForSale();
-            
-            //int currentUserId = GetCurrentUserId();
-            //vm.User = _userRepo.GetUserById(currentUserId);
+            DiscCartViewModel vm = new DiscCartViewModel();
+            int currentUserId = GetCurrentUserId();
+            vm.User = _userRepo.GetUserById(currentUserId);
+            vm.Cart = new Cart();
+            vm.Cart.UserId = currentUserId;
+            _cartRepo.AddCart(vm.Cart);
+            vm.Discs = _discRepo.GetAllDiscsForSale();
 
-            return View(discs);
+            return View(vm);
         }
 
         // GET: DiscController/Details/5
