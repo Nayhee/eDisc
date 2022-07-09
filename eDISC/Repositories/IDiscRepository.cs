@@ -11,7 +11,7 @@ namespace eDISC.Repositories
         List<Brand> GetAllBrands();
         void AddDisc(Disc disc);
 
-        void AddDiscToCart(int cartId, int discId, int userId);
+        List<Disc> SearchDiscByName(string q);
         void UpdateDisc(Disc disc);
         void DeleteDisc(int id);
     }

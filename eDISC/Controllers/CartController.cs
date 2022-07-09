@@ -16,26 +16,46 @@ namespace eDISC.Controllers
         private readonly IDiscRepository _discRepo;
         private readonly IUserRepository _userRepo;
 
-        public ActionResult AddToCart(int id, int CartId)
+        public CartController(IDiscRepository discRepo, IUserRepository userRepo, ICartRepository cartRepo)
         {
-            //might need to put a try here
-            Disc discToAdd = _discRepo.GetDiscById(id);
-            int currentUserId = GetCurrentUserId();
-            _discRepo.AddDiscToCart(CartId, id, currentUserId );
+            _discRepo = discRepo;
+            _userRepo = userRepo;
+            _cartRepo = cartRepo;
+        }
 
-            return RedirectToAction("Disc", "Details", new { id = id });
+
+        public ActionResult AddToCart(int id)
+        {
+            try
+            {
+                int userId = GetCurrentUserId();
+                Cart cart = _cartRepo.GetUsersCurrentCart(userId); //need this to come back with list of discs so I don't add it again!
+
+                Boolean includes = false;
+                foreach(Disc disc in cart.Discs)
+                {
+                    if(disc.Id == id)
+                    {
+                        includes = true;
+                        break;
+                    }
+                }
+
+                if(!includes)
+                {
+                    _cartRepo.AddDiscToCart(cart.Id, id, userId);
+                    //figure out a way to send a "Added to Cart" message.
+                }
+
+                return RedirectToAction("Details", "Disc", new { id = id });
+
+            }
+            catch(Exception ex)
+            {
+                return NotFound();
+            }
 
         }
-        
-        //public ActionResult AddToCart(int id)
-        //{
-        //    //first see if they already have a cart.
-        //    //if they do, add disc to that cart. Otherwise 
-        //    int userId = GetCurrentUserId();
-        //    Disc discToAdd = _discRepo.GetDiscById(id);
-        //    //they are viewing details and click add to cart for the disc they want to buy. 
-        //    //ID gets passed here, then  I add product to cart and return view to the same details page. 
-        //}
 
         public ActionResult Cart(Cart cart) //not sure what to pass in 
         {

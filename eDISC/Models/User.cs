@@ -20,9 +20,8 @@ namespace eDISC.Models
         public int UserTypeId { get; set; }
         public UserType UserType { get; set; }
 
-        public List<Disc> SoldDiscs { get; set; } = new List<Disc>();
-
         public Cart Cart { get; set; }
+
 
     }
 }

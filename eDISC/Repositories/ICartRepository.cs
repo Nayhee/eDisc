@@ -10,7 +10,10 @@ namespace eDISC.Repositories
 
         void AddCart(Cart cart);
         void AddDiscToCart(int cartId, int discId, int userId);
-        List<Disc> GetACartsDiscs(Cart cart);
+        List<Disc> GetACartsDiscs(int cartId);
         Cart GetCartById(int cartId);
+
+        Cart GetUsersCurrentCart(int userId);
+    
     }
 }

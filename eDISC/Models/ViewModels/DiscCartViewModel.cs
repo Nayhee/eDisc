@@ -8,6 +8,8 @@ namespace eDISC.Models.ViewModels
         public List<Disc> Discs { get; set; }
         public Cart Cart { get; set; }
 
-        public User User { get; set; }
+        public int UserId { get; set; }
+
+      
     }
 }

@@ -27,20 +27,15 @@ namespace eDISC.Controllers
         // GET: DiscController
         public ActionResult Index()
         {
-            DiscCartViewModel vm = new DiscCartViewModel();
-            int currentUserId = GetCurrentUserId();
-            vm.User = _userRepo.GetUserById(currentUserId);
-            vm.Cart = new Cart();
-            vm.Cart.UserId = currentUserId;
-            _cartRepo.AddCart(vm.Cart);
-            vm.Discs = _discRepo.GetAllDiscsForSale();
-
-            return View(vm);
+            List<Disc> discs = _discRepo.GetAllDiscsForSale();
+            return View(discs);
         }
+
 
         // GET: DiscController/Details/5
         public ActionResult Details(int id)
         {
+                       
             Disc disc = _discRepo.GetDiscById(id);
             if(disc == null)
             {
@@ -127,6 +122,7 @@ namespace eDISC.Controllers
             }
         }
 
+
        
 
 
@@ -136,5 +132,14 @@ namespace eDISC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
+
+        //public ActionResult Search(DiscCartViewModel vm)
+        //{
+
+        //    vm.Discs = _discRepo.SearchDiscByName(vm.User.SearchString);
+
+        //    return RedirectToAction("Index", vm);
+
+        //}
     }
 }

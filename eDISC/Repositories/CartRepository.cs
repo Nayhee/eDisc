@@ -3,10 +3,11 @@ using eDISC.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace eDISC.Repositories
 {
-    public class CartRepository : ICartRepository, ICartRepository
+    public class CartRepository : ICartRepository
     {
         private readonly IConfiguration _config;
 
@@ -23,22 +24,51 @@ namespace eDISC.Repositories
             }
         }
 
-        public Cart GetUsersMostRecentCart
-
-
-        public List<Disc> GetACartsDiscs(Cart cart) //func may not be right
+        public Cart GetUsersCurrentCart(int userId)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" SELECT * FROM discs d,  
+                    cmd.CommandText = @"SELECT TOP 1 c.Id, c.DateCreated FROM Cart c WHERE c.UserId=@userId ORDER BY c.DateCreated DESC";
+                    cmd.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if(reader.Read())
+                        {
+                            Cart cart = new Cart()
+                            {
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                DateCreated = DbUtils.GetDateTime(reader, "DateCreated"),
+                            };
+                            cart.Discs = GetACartsDiscs(cart.Id);
+                            return cart;
+                        }
+                        else
+                        {
+                        return null;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public List<Disc> GetACartsDiscs(int cartId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" SELECT * FROM disc d  
                                         JOIN CartDisc cd on cd.DiscId=d.Id
                                         JOIN Cart c on c.Id=cd.CartId
                                         where c.Id=@id;
                     ";
-                    cmd.Parameters.AddWithValue("@id", cart.Id);
+                    cmd.Parameters.AddWithValue("@id", cartId);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -61,11 +91,6 @@ namespace eDISC.Repositories
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 DiscTypeId = reader.GetInt32(reader.GetOrdinal("DiscTypeId")),
                                 Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Brand = new Brand()
-                                {
-                                    Id = reader.GetInt32(reader.GetOrdinal("BrandsId")),
-                                    Name = reader.GetString(reader.GetOrdinal("BrandName"))
-                                }
                             };
                             discs.Add(disc);
                         }
@@ -103,7 +128,7 @@ namespace eDISC.Repositories
                                     Name = reader.GetString(reader.GetOrdinal("Name")),
                                 }
                             };
-                            cart.Discs = GetACartsDiscs(cart);
+                            cart.Discs = GetACartsDiscs(cart.Id);
                             return cart;
                         }
                         else
@@ -115,6 +140,7 @@ namespace eDISC.Repositories
             }
         }
 
+
         public void AddCart(Cart cart)
         {
             using (SqlConnection conn = Connection)
@@ -122,10 +148,11 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" INSERT INTO Cart (UserId)
+                    cmd.CommandText = @" INSERT INTO Cart (UserId, DateCreated)
                                           OUTPUT INSERTED.ID
-                                          VALUES (@userId";
+                                          VALUES (@userId, @dateCreated)";
                     DbUtils.AddParameter(cmd, "@userId", cart.UserId);
+                    DbUtils.AddParameter(cmd, "@dateCreated", cart.DateCreated);
 
                     int id = (int)cmd.ExecuteScalar();
                     cart.Id = id;

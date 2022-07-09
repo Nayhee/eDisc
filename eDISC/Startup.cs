@@ -29,6 +29,7 @@ namespace eDISC
 
             services.AddTransient<IDiscRepository, DiscRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICartRepository, CartRepository>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => options.LoginPath = "/User/LogIn");

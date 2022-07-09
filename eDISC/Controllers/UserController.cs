@@ -16,10 +16,12 @@ namespace eDISC.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepo;
+        private readonly ICartRepository _cartRepo;
 
-        public UserController(IUserRepository userRepo)
+        public UserController(IUserRepository userRepo, ICartRepository cartRepo)
         {
             _userRepo = userRepo;
+            _cartRepo = cartRepo;
         }
 
         [Authorize]
@@ -38,13 +40,13 @@ namespace eDISC.Controllers
         }
 
         
-        // GET: UserController/Create
+        //Register Form View
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: UserController/Create
+        //Posts/Creates New User
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
@@ -169,6 +171,12 @@ namespace eDISC.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
+            Cart cart = new Cart();
+            cart.UserId = user.Id;
+            cart.DateCreated = DateTime.Now;
+
+            _cartRepo.AddCart(cart); //create cart on login, then I can have repo method to query and find users most recent cart.
+            
             return RedirectToAction("Index", "Disc");
         }
 
