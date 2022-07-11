@@ -33,9 +33,9 @@ namespace eDISC.Repositories
                                     b.Id as BrandsId, b.Name as BrandName,
                                     t.Id as TagsId, t.Name as TagName
                                     FROM Disc d 
-                                    JOIN Brands b on b.Id=d.BrandId
-                                    JOIN DiscTags dt on dt.DiscId=d.Id
-                                    JOIN Tags t on t.Id=dt.TagId
+                                    JOIN Brand b on b.Id=d.brandId
+                                    JOIN DiscTag dt on dt.discId=d.Id
+                                    JOIN Tag t on t.Id=dt.tagId
                                     WHERE d.Name LIKE @Criterion
                     ";
                     cmd.CommandText = sql;
@@ -55,7 +55,7 @@ namespace eDISC.Repositories
                                 {
                                     Id = DbUtils.GetInt(reader, "Id"),
                                     Name = DbUtils.GetString(reader, "Name"),
-                                    BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                    BrandId = DbUtils.GetInt(reader, "brandId"),
                                     Condition = DbUtils.GetString(reader, "Condition"),
                                     Speed = DbUtils.GetInt(reader, "Speed"),
                                     Glide = DbUtils.GetInt(reader, "Glide"),
@@ -64,8 +64,8 @@ namespace eDISC.Repositories
                                     Plastic = DbUtils.GetString(reader, "Plastic"),
                                     Price = DbUtils.GetInt(reader, "Price"),
                                     Weight = DbUtils.GetInt(reader, "Weight"),
-                                    ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
-                                    DiscTypeId = DbUtils.GetInt(reader, "DiscTypeId"),
+                                    ImageUrl = DbUtils.GetString(reader, "imageUrl"),
+                                    DiscTypeId = DbUtils.GetInt(reader, "discTypeId"),
                                     Description = DbUtils.GetString(reader, "Description"),
                                     Brand = new Brand()
                                     {
@@ -102,8 +102,8 @@ namespace eDISC.Repositories
                 {
                     cmd.CommandText = @"SELECT d.*, b.Id as BrandsId, b.Name as BrandName 
                                         FROM Disc d 
-                                        JOIN Brands b on b.Id=d.BrandId
-                                        WHERE d.DiscTypeId=1";
+                                        JOIN Brand b on b.Id=d.brandId
+                                        WHERE d.discTypeId=1";
 
                     using(SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -150,9 +150,9 @@ namespace eDISC.Repositories
                                         b.Id as BrandsId, b.Name as BrandName,
                                         t.Id as TagsId, t.Name as TagName
                                         FROM Disc d 
-                                        JOIN Brands b on b.Id=d.BrandId
-                                        JOIN DiscTags dt on dt.DiscId=d.Id
-                                        JOIN Tags t on t.Id=dt.TagId
+                                        JOIN Brand b on b.Id=d.brandId
+                                        JOIN DiscTag dt on dt.discId=d.Id
+                                        JOIN Tag t on t.Id=dt.tagId
                                         WHERE d.Id=@id
                     ";
                     DbUtils.AddParameter(cmd, "@id", id);
@@ -213,7 +213,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Disc ([Name], BrandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [ImageURL], Weight, Description, DiscTypeId)
+                    cmd.CommandText = @"INSERT INTO Disc ([Name], brandId, Condition, Speed, Glide, Turn, Fade, Plastic, Price, [imageURL], Weight, Description, discTypeId)
                                         OUTPUT INSERTED.ID
                                         VALUES (@name, @brandId, @condition, @speed, @glide, @turn, @fade, @plastic, @price, @imageURL, @weight, @description, @discTypeId)";
                     DbUtils.AddParameter(cmd, "@name", disc.Name);
@@ -246,7 +246,7 @@ namespace eDISC.Repositories
                     cmd.CommandText = @"UPDATE Disc
                                         SET 
                                             [Name] = @name, 
-                                            BrandId = @brandId,
+                                            brandId = @brandId,
                                             Condition = @condition,
                                             Speed = @speed, 
                                             Glide = @glide,
@@ -254,10 +254,10 @@ namespace eDISC.Repositories
                                             Fade = @fade, 
                                             Plastic = @plastic,
                                             Price = @price,
-                                            ImageURL = @imageURL,
+                                            imageURL = @imageURL,
                                             Weight = @weight,
                                             Description = @description,
-                                            DiscTypeId = @discTypeId
+                                            discTypeId = @discTypeId
                                                
                                             WHERE Id = @id";
 
@@ -300,7 +300,7 @@ namespace eDISC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @" Select * FROM Brands";
+                    cmd.CommandText = @" Select * FROM Brand";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
